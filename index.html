@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños Julián</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+        }
+
+        .emoji {
+            font-size: 100px;
+            transition: transform 0.5s ease;
+            cursor: pointer;
+        }
+
+        .mensaje {
+            display: none;
+            font-size: 2em;
+            color: #ff4500;
+            margin-top: 20px;
+        }
+
+        .gif {
+            display: none;
+            position: absolute;
+            width: 100px;
+        }
+
+        .mostrarMensaje {
+            display: block;
+            animation: mostrarMensaje 1s ease-out forwards;
+        }
+
+        @keyframes mostrarMensaje {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>¡Feliz Cumpleaños Julián!</h1>
+    <div class="emoji" id="emoji">🎂</div>
+    <div class="mensaje" id="mensajeFinal">Feliz Cumpleaños Julián, ¡venga rápido para jugar!</div>
+
+    <!-- Sonido de corneta -->
+    <audio id="cornetaSound" src="https://www.myinstants.com/media/sounds/airhorn.mp3"></audio>
+
+    <!-- Música de atraco de los Minions (Ruta local) -->
+    <audio id="minionsMusic" src="musica.mp3" loop></audio>
+
+    <script>
+        let clicks = 0;
+        const emoji = document.getElementById('emoji');
+        const mensajeFinal = document.getElementById('mensajeFinal');
+        const cornetaSound = document.getElementById('cornetaSound');
+        const minionsMusic = document.getElementById('minionsMusic');
+
+        // Lista de URLs de GIFs diferentes
+        const gifs = [
+            'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',  // Ejemplo GIF 1
+            'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif',  // Ejemplo GIF 2
+            'https://media.giphy.com/media/3og0IPxMM0erATueVW/giphy.gif',  // Ejemplo GIF 3
+            'https://media.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif',   // Ejemplo GIF 4
+            'https://media1.tenor.com/m/icxnIYgzZIwAAAAC/baile-del-troleo-esqueleto.gif',  // Ejemplo GIF 5
+        ];
+
+        // Función para generar GIFs aleatorios en diferentes posiciones
+        function crearGifAleatorio() {
+            const gif = document.createElement('img');
+            const gifUrl = gifs[Math.floor(Math.random() * gifs.length)]; // Seleccionar GIF aleatorio
+            gif.src = gifUrl;
+            gif.classList.add('gif');
+            gif.style.top = Math.random() * window.innerHeight + 'px'; // Posición aleatoria en el eje Y
+            gif.style.left = Math.random() * window.innerWidth + 'px'; // Posición aleatoria en el eje X
+            document.body.appendChild(gif);
+
+            // Mostrar el GIF
+            setTimeout(() => {
+                gif.style.display = 'block';
+            }, 3000); // Aparecerán después de 3 segundos
+        }
+
+        // Crear múltiples GIFs aleatorios
+        function generarLluviaDeGifs(cantidad) {
+            for (let i = 0; i < cantidad; i++) {
+                crearGifAleatorio();
+            }
+        }
+
+        emoji.addEventListener('click', function() {
+            clicks++;
+            emoji.style.transform = `scale(${1 + clicks * 0.5})`; // Aumenta el tamaño con cada clic
+
+            if (clicks >= 5) { // Después de 5 clics, explota
+                emoji.style.display = 'none';
+                mensajeFinal.classList.add('mostrarMensaje');
+
+                // Reproducir sonido de corneta
+                setTimeout(function() {
+                    cornetaSound.play(); // Reproducir sonido "tun-tun-tun-tuuuuuun"
+                    generarLluviaDeGifs(30); // Generar 30 GIFs diferentes
+
+                    // Después de que suene la corneta, empieza la música de atraco de los Minions
+                    cornetaSound.onended = function() {
+                        minionsMusic.play(); // Iniciar música de atraco
+                    };
+                }, 3000); // 3 segundos después
+            }
+        });
+    </script>
+</body>
+</html>
